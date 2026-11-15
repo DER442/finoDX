@@ -1,0 +1,17 @@
+{
+  "samples_dir": "DRUMS",
+  "default_kit": "PowerKit1",
+  "keep_manual_on_style_load": true,
+  "program_map": {
+    "0": "PowerKit1",
+    "8": "PowerKit1",
+    "16": "PowerKit1",
+    "24": "PowerKit1",
+    "25": "PowerKit1",
+    "32": "PowerKit1",
+    "40": "PowerKit1",
+    "48": "PowerKit1",
+    "56": "PowerKit1"
+  },
+  "kit_folders": []
+}
