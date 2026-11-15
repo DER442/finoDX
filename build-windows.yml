@@ -1,0 +1,63 @@
+name: Build Windows app
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List the repository files
+        shell: pwsh
+        run: Get-ChildItem -Name
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build tools
+        run: python -m pip install --upgrade pip pyinstaller
+
+      - name: Install VST hosting libraries
+        run: python -m pip install numpy pedalboard sounddevice pywebview
+
+      - name: Check the libraries load
+        run: python -c "import numpy, pedalboard, sounddevice; print('libraries ok', pedalboard.__version__)"
+
+      - name: Check the window library (the app falls back to an Edge app window without it)
+        continue-on-error: true
+        run: python -c "import webview; print('pywebview ok')"
+
+      - name: Test the drumkit engine
+        run: python tests/test_drumkit_engine.py
+
+      - name: Test the beat restart
+        run: python tests/test_restart.py
+
+      - name: Test the interlocking fills
+        run: python tests/test_interlock.py
+
+      - name: Test the Multipad re-sync
+        run: python tests/test_pad_resync.py
+
+      - name: Test the Multipad layout
+        run: python tests/test_multipad_layout.py
+
+      - name: Check the program files compile
+        run: python -m compileall -q drum_engine arranger_app.py sty_play.py sty_parse.py multipad.py effects.py vst_out.py plugin_host.py plugin_bridge.py dx_client.py plugin_ui.py
+
+      - name: Build the app
+        run: python -m PyInstaller --noconfirm --onedir --name DX-Arranger --hidden-import vst_out --hidden-import plugin_host --hidden-import plugin_bridge --hidden-import dx_client --hidden-import plugin_ui --hidden-import drum_engine --hidden-import drum_engine.engine --hidden-import drum_engine.drumkit_manager --hidden-import drum_engine.note_mapper --hidden-import drum_engine.sample_loader --collect-all pedalboard --collect-all sounddevice --collect-all webview arranger_app.py
+
+      - name: Add the panel, helper files and readme
+        shell: pwsh
+        run: |
+          Copy-Item index.html, bridge.js, drumkit_config.json, Start-DX-Arranger.bat, Start-for-phone.bat, README-WINDOWS.txt dist/DX-Arranger/
+          New-Item -ItemType Directory -Force dist/DX-Arranger/DRUMS | Out-Null
+          Compress-Archive -Path dist/DX-Arranger -DestinationPath DX-Arranger-Windows.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DX-Arranger-Windows
+          path: DX-Arranger-Windows.zip
