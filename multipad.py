@@ -40,7 +40,7 @@ NPADS = 4
 # What each pad button plays: only these drum notes (the kit's own instruments). Pads 1-4 on the panel:
 #   1 = F#3 (54) tambourine | 2 = C6 (84) bell tree | 3 and 4 = F#3 (54), A#4 (70) maracas, A#5 (82) shaker
 # A file that is loaded fills every pad whose notes it contains. config.json "multipad_layout": null = no filter.
-DEFAULT_LAYOUT = {1: [54], 2: [84], 3: [70, 82], 4: [54, 70, 82]}
+DEFAULT_LAYOUT = {1: [54], 2: [84], 3: [70, 70, 82], 4: [54, 70, 82]}
 
 def parse_layout(value):
     """config value -> {pad: set(notes)} or None (no filtering)."""
