@@ -1,4 +1,4 @@
-"""Multipad layout: P1 = 54 | P2 = 84 | P3, P4 = 54, 70, 82. A loaded file fills the pads; pads play the style's WAV kit."""
+"""Multipad layout: P1 = 54 | P2 = 84 | P3, P4 = 70, 82. A loaded file fills the pads; pads play the style's WAV kit."""
 import os, sys, struct, tempfile, shutil, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
